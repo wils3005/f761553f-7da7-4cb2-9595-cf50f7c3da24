@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+
+set -u
+
+[[ -f .env ]] && source .env
+
+declare -a stats1 stats2
+
+stat_files() {
+  local -n stats
+  stats=$1
+  readarray stats < <(find src/web -type f -exec stat {} \;)
+}
+
+stat_files stats1
+stat_files stats2
+
+while true; do
+  stats2=("${stats1[@]}")
+  stat_files stats1
+  sleep 1
+  if [[ "${stats1[*]}" != "${stats2[*]}" ]]; then
+    "$PWD/bin/deploy" web
+  fi
+done

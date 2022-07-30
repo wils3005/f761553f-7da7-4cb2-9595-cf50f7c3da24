@@ -1,0 +1,42 @@
+#!/usr/bin/env bash
+
+set -eu
+
+[[ -f .env ]] && source .env
+
+api() {
+  local out_dir
+  readonly out_dir='build/api'
+
+  rm -rf $out_dir
+  node_modules/.bin/tsc --project tsconfig.api.json
+}
+
+web() {
+  local in_dir out_dir
+  readonly in_dir='src/web'
+  readonly out_dir='build/web'
+
+  rm -rf $out_dir
+  node_modules/.bin/esbuild \
+    --asset-names='[name]' \
+    --bundle \
+    --inject:$in_dir/shim.ts \
+    --loader:.html=file \
+    --loader:.png=file \
+    --minify \
+    --outfile=$out_dir/app.js \
+    $in_dir/index.tsx
+
+  node_modules/.bin/tailwindcss \
+    --input $in_dir/app.css \
+    --minify \
+    --output $out_dir/app.css
+
+  cp -R \
+    $in_dir/assets/* \
+    $out_dir
+}
+
+"${@:?usage: build [ api | web ]}"
+

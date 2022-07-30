@@ -1,0 +1,39 @@
+{
+  "custom": {
+    "dotenv": {
+      "exclude": [
+        "AWS_ACCESS_KEY_ID",
+        "AWS_PROFILE",
+        "AWS_REGION",
+        "AWS_S3_WEB_BUCKET_NAME",
+        "AWS_SECRET_ACCESS_KEY",
+        "AWS_SECURITY_GROUP_ID",
+        "AWS_SESSION_TOKEN",
+        "AWS_SUBNET_ID"
+      ]
+    }
+  },
+  "frameworkVersion": "3",
+  "functions": {
+    "default": {
+      "events": [{ "httpApi": "*" }],
+      "handler": "build/api/index.handler"
+    }
+  },
+  "package": {
+    "patterns": ["!**", "build/api/**"]
+  },
+  "plugins": ["serverless-dotenv-plugin", "serverless-offline"],
+  "provider": {
+    "architecture": "x86_64",
+    "name": "aws",
+    "region": "${env:AWS_REGION}",
+    "runtime": "nodejs16.x",
+    "stage": "${env:SERVERLESS_STAGE}",
+    "vpc": {
+      "securityGroupIds": ["${env:AWS_SECURITY_GROUP_ID}"],
+      "subnetIds": ["${env:AWS_SUBNET_ID}"]
+    }
+  },
+  "service": "f761553f-7da7-4cb2-9595-cf50f7c3da24"
+}

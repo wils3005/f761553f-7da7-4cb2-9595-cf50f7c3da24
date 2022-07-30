@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "allowJs": true,
+    "allowSyntheticDefaultImports": true,
+    "baseUrl": "./",
+    "checkJs": true,
+    "esModuleInterop": true,
+    "importsNotUsedAsValues": "error",
+    "jsx": "react-jsx",
+    "moduleResolution": "node",
+    "noEmit": true,
+    "outDir": "build/",
+    "resolveJsonModule": true,
+    "strict": true
+  },
+  "exclude": ["bin", "build", "tmp"]
+}

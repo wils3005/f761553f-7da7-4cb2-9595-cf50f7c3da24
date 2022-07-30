@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+
+set -eu
+
+[[ -f .env ]] && source .env
+
+api() {
+  "$PWD/bin/build"
+
+  node \
+    --require dotenv/config \
+    node_modules/.bin/sls deploy \
+    --verbose
+
+  tput bel
+}
+
+web() {
+  "$PWD/bin/build" web
+  aws s3 cp build/web "s3://$AWS_S3_WEB_BUCKET_NAME" \
+    --profile "$AWS_PROFILE" \
+    --recursive
+
+  tput bel
+}
+
+"${@:?usage: deploy [ api | web ]}"
